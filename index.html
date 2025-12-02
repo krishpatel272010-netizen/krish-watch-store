@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krish Watches - Premium Timepieces</title>
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init("iYourB8fHMamba7Uw"); // Public Key
+        })();
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -404,6 +413,33 @@
             font-size: 1.3rem;
         }
 
+        .form-group {
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            color: #856404;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
         .file-upload-wrapper {
             position: relative;
             margin: 1.5rem 0;
@@ -460,7 +496,7 @@
             box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
 
-        .submit-button:hover {
+        .submit-button:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
         }
@@ -469,6 +505,7 @@
             background: #ccc;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .close-button {
@@ -529,6 +566,26 @@
         .success-message h3 {
             margin-bottom: 1rem;
             font-size: 1.5rem;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin: 1rem auto;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Footer */
@@ -790,40 +847,71 @@
                     <h4>💡 How to Complete Your Order:</h4>
                     <ol>
                         <li><strong>Make Payment:</strong> Scan QR code or use UPI ID above</li>
-                        <li><strong>Take Screenshot:</strong> Capture your payment confirmation</li>
-                        <li><strong>Upload Below:</strong> Click "Upload Screenshot" button</li>
-                        <li><strong>Submit:</strong> Click "Confirm Order" to complete</li>
+                        <li><strong>Fill Details:</strong> Enter your contact information below</li>
+                        <li><strong>Upload Screenshot:</strong> Add your payment confirmation</li>
+                        <li><strong>Submit:</strong> Click "Confirm Order" - You'll get instant email!</li>
                     </ol>
                 </div>
 
-                <div class="upload-section">
-                    <h3>📸 Upload Payment Screenshot</h3>
-                    <p style="color: #856404; margin-bottom: 1rem;">Please upload your payment confirmation screenshot</p>
-                    
-                    <div class="file-upload-wrapper">
-                        <input type="file" id="fileUpload" class="file-upload-input" accept="image/*" onchange="handleFileSelect(event)">
-                        <label for="fileUpload" class="file-upload-label">
-                            📤 Upload Screenshot
-                        </label>
+                <form id="orderForm">
+                    <div class="upload-section">
+                        <h3>📋 Your Details</h3>
+                        
+                        <div class="form-group">
+                            <label for="customerName">Your Name *</label>
+                            <input type="text" id="customerName" name="customerName" required placeholder="Enter your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerEmail">Your Email *</label>
+                            <input type="email" id="customerEmail" name="customerEmail" required placeholder="your@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerPhone">Phone Number *</label>
+                            <input type="tel" id="customerPhone" name="customerPhone" required placeholder="9876543210">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerAddress">Delivery Address *</label>
+                            <textarea id="customerAddress" name="customerAddress" required placeholder="Enter your complete delivery address"></textarea>
+                        </div>
+
+                        <h3 style="margin-top: 2rem;">📸 Upload Payment Screenshot *</h3>
+                        <p style="color: #856404; margin-bottom: 1rem;">Upload your UPI payment confirmation</p>
+                        
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="fileUpload" class="file-upload-input" accept="image/*" required onchange="handleFileSelect(event)">
+                            <label for="fileUpload" class="file-upload-label">
+                                📤 Choose Screenshot
+                            </label>
+                        </div>
+                        
+                        <div class="file-name" id="fileName"></div>
+                        <img id="previewImage" class="preview-image" alt="Payment Screenshot Preview">
                     </div>
-                    
-                    <div class="file-name" id="fileName"></div>
-                    <img id="previewImage" class="preview-image" alt="Payment Screenshot Preview">
-                </div>
 
-                <div class="success-message" id="successMessage">
-                    <h3>✅ Order Confirmed!</h3>
-                    <p>Thank you for your purchase! We've received your payment details.</p>
-                    <p>You'll receive an order confirmation email at <strong>krishpatel9723@gmail.com</strong> shortly.</p>
-                    <p style="margin-top: 1rem;">Order ID: <strong id="orderId"></strong></p>
-                </div>
+                    <div class="loading-spinner" id="loadingSpinner">
+                        <div class="spinner"></div>
+                        <p style="margin-top: 1rem; color: #667eea; font-weight: bold;">Sending your order...</p>
+                    </div>
 
-                <div style="margin-top: 2rem;">
-                    <button class="submit-button" id="submitButton" onclick="confirmPayment()" disabled>
-                        ✓ Confirm Order
-                    </button>
-                    <button class="close-button" onclick="closeModal()">Close</button>
-                </div>
+                    <div class="success-message" id="successMessage">
+                        <h3>✅ Order Confirmed!</h3>
+                        <p>Thank you for your purchase! We've sent order confirmation emails to:</p>
+                        <p><strong>You:</strong> <span id="customerEmailDisplay"></span></p>
+                        <p><strong>Store:</strong> krishpatel9723@gmail.com</p>
+                        <p style="margin-top: 1rem;">Order ID: <strong id="orderId"></strong></p>
+                        <p style="margin-top: 1rem;">We'll process your order within 24 hours!</p>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <button type="submit" class="submit-button" id="submitButton">
+                            ✓ Confirm Order
+                        </button>
+                        <button type="button" class="close-button" onclick="closeModal()">Close</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -849,6 +937,7 @@
         let currentProduct = '';
         let currentPrice = '';
         let uploadedFile = null;
+        let uploadedFileBase64 = '';
 
         function scrollToProducts() {
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
@@ -872,12 +961,15 @@
             document.getElementById('cartCount').textContent = cartCount;
             
             // Reset form
+            document.getElementById('orderForm').reset();
             document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('loadingSpinner').style.display = 'none';
             document.getElementById('fileName').style.display = 'none';
             document.getElementById('previewImage').style.display = 'none';
-            document.getElementById('fileUpload').value = '';
-            document.getElementById('submitButton').disabled = true;
+            document.getElementById('submitButton').disabled = false;
+            document.getElementById('submitButton').textContent = '✓ Confirm Order';
             uploadedFile = null;
+            uploadedFileBase64 = '';
         }
 
         function closeModal() {
@@ -910,78 +1002,81 @@
                 fileName.textContent = '✓ ' + file.name;
                 fileName.style.display = 'block';
                 
-                // Show preview
+                // Show preview and convert to base64
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const preview = document.getElementById('previewImage');
                     preview.src = e.target.result;
                     preview.style.display = 'block';
+                    uploadedFileBase64 = e.target.result;
                 };
                 reader.readAsDataURL(file);
-                
-                // Enable submit button
-                document.getElementById('submitButton').disabled = false;
             }
         }
 
-        function confirmPayment() {
+        // Handle form submission
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             if (!uploadedFile) {
-                alert('⚠️ Please upload your payment screenshot first!');
+                alert('⚠️ Please upload your payment screenshot!');
                 return;
             }
 
             // Generate order ID
             const orderId = 'KW' + Date.now();
-            document.getElementById('orderId').textContent = orderId;
             
-            // Show success message
-            const successMsg = document.getElementById('successMessage');
-            successMsg.style.display = 'block';
+            // Get form data
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const customerAddress = document.getElementById('customerAddress').value;
             
-            // Scroll to success message
-            successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Prepare email content
-            const subject = encodeURIComponent(`New Order #${orderId} - ${currentProduct}`);
-            const body = encodeURIComponent(
-                `🎉 NEW ORDER RECEIVED!\n\n` +
-                `Order ID: ${orderId}\n` +
-                `Product: ${currentProduct}\n` +
-                `Amount: ₹${currentPrice}\n` +
-                `Payment Method: UPI (9723773368@fam)\n\n` +
-                `Customer has uploaded payment screenshot.\n` +
-                `Screenshot file: ${uploadedFile.name}\n\n` +
-                `⚠️ IMPORTANT: Customer will send payment screenshot separately.\n` +
-                `Please verify the transaction and process the order.\n\n` +
-                `Order Date: ${new Date().toLocaleString()}\n\n` +
-                `---\n` +
-                `Krish Watches - Premium Timepieces\n` +
-                `Contact: 9723773368`
-            );
-            
-            // Open email client
-            setTimeout(() => {
-                window.location.href = `mailto:krishpatel9723@gmail.com?subject=${subject}&body=${body}`;
-            }, 1000);
-            
-            // Show instructions
-            setTimeout(() => {
-                alert(
-                    '📧 NEXT STEPS:\n\n' +
-                    '1. Your email app will open\n' +
-                    '2. Attach your payment screenshot\n' +
-                    '3. Send the email\n\n' +
-                    `Order ID: ${orderId}\n` +
-                    `Product: ${currentProduct}\n` +
-                    `Amount: ₹${currentPrice}\n\n` +
-                    'We\'ll confirm your order within 24 hours!'
-                );
-            }, 2000);
-            
-            // Disable button after submission
+            // Show loading
+            document.getElementById('loadingSpinner').style.display = 'block';
             document.getElementById('submitButton').disabled = true;
-            document.getElementById('submitButton').textContent = '✓ Order Submitted';
-        }
+            
+            // Prepare email parameters
+            const templateParams = {
+                order_id: orderId,
+                product_name: currentProduct,
+                product_price: currentPrice,
+                customer_name: customerName,
+                customer_email: customerEmail,
+                customer_phone: customerPhone,
+                customer_address: customerAddress,
+                order_date: new Date().toLocaleString(),
+                payment_screenshot: uploadedFileBase64,
+                to_email: 'krishpatel9723@gmail.com'
+            };
+            
+            // Send email using EmailJS
+            emailjs.send('service_iqxqxqh', 'template_iqxqxqh', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    
+                    // Hide loading
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    
+                    // Show success message
+                    document.getElementById('orderId').textContent = orderId;
+                    document.getElementById('customerEmailDisplay').textContent = customerEmail;
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Update button
+                    document.getElementById('submitButton').textContent = '✓ Order Submitted';
+                    
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    
+                    // Hide loading
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    document.getElementById('submitButton').disabled = false;
+                    
+                    alert('❌ Failed to send order. Please try again or contact us directly at krishpatel9723@gmail.com');
+                });
+        });
 
         function showCart() {
             alert('🛒 Cart feature coming soon!\n\nFor now, click "Buy Now" on any product to purchase directly.');
