@@ -249,23 +249,42 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
+            overflow-y: auto;
+            padding: 2rem 0;
         }
 
         .modal-content {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            padding: 3rem;
+            padding: 2.5rem;
             border-radius: 25px;
-            max-width: 600px;
+            max-width: 650px;
             width: 90%;
+            margin: auto;
             text-align: center;
             animation: slideIn 0.4s ease;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
             border: 3px solid #667eea;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
         }
 
         .modal h2 {
@@ -281,7 +300,7 @@
             background: white;
             padding: 2rem;
             border-radius: 20px;
-            margin: 2rem 0;
+            margin: 1.5rem 0;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
@@ -294,12 +313,13 @@
         }
 
         .qr-code {
-            width: 280px;
-            height: 280px;
+            width: 260px;
+            height: 260px;
             margin: 0 auto;
             border-radius: 15px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             border: 5px solid white;
+            display: block;
         }
 
         .payment-divider {
@@ -333,7 +353,7 @@
         }
 
         .upi-id {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: bold;
             color: #667eea;
             margin: 1rem 0;
@@ -354,7 +374,7 @@
         .copy-button {
             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
-            padding: 1rem 2.5rem;
+            padding: 0.9rem 2rem;
             border: none;
             border-radius: 12px;
             cursor: pointer;
@@ -370,23 +390,85 @@
             box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
         }
 
-        .confirm-button {
+        .upload-section {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 2px dashed #ffc107;
+        }
+
+        .upload-section h3 {
+            color: #856404;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: inline-block;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .file-upload-label:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-name {
+            margin-top: 1rem;
+            color: #28a745;
+            font-weight: bold;
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            margin: 1rem auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 1.2rem 3rem;
             border: none;
             border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
-            margin: 0.5rem;
+            margin: 1rem 0.5rem;
             transition: all 0.3s;
-            font-size: 1rem;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
 
-        .confirm-button:hover {
+        .submit-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .submit-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .close-button {
@@ -409,26 +491,44 @@
         }
 
         .payment-instructions {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 1rem;
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 1.5rem;
             margin: 1.5rem 0;
             border-radius: 8px;
             text-align: left;
         }
 
         .payment-instructions h4 {
-            color: #856404;
-            margin-bottom: 0.5rem;
+            color: #1565C0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
         }
 
         .payment-instructions ol {
             margin-left: 1.5rem;
-            color: #856404;
+            color: #1565C0;
         }
 
         .payment-instructions li {
-            margin: 0.5rem 0;
+            margin: 0.8rem 0;
+            line-height: 1.6;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            display: none;
+            animation: fadeInUp 0.5s ease;
+            font-size: 1.1rem;
+        }
+
+        .success-message h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
         }
 
         /* Footer */
@@ -474,11 +574,11 @@
 
         @keyframes slideIn {
             from {
-                transform: scale(0.8);
+                transform: scale(0.9) translateY(-20px);
                 opacity: 0;
             }
             to {
-                transform: scale(1);
+                transform: scale(1) translateY(0);
                 opacity: 1;
             }
         }
@@ -491,6 +591,7 @@
             
             .nav-links {
                 gap: 1rem;
+                font-size: 0.9rem;
             }
             
             .products-grid {
@@ -498,12 +599,17 @@
             }
 
             .qr-code {
-                width: 220px;
-                height: 220px;
+                width: 200px;
+                height: 200px;
             }
 
             .modal-content {
-                padding: 2rem 1.5rem;
+                padding: 1.5rem;
+                width: 95%;
+            }
+
+            .amount-display {
+                font-size: 1.5rem;
             }
         }
 
@@ -519,17 +625,8 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #666;
-        }
-
-        .success-message {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin: 1rem 0;
-            display: none;
-            animation: fadeInUp 0.5s ease;
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -690,21 +787,41 @@
                 </div>
 
                 <div class="payment-instructions">
-                    <h4>💡 Payment Instructions:</h4>
+                    <h4>💡 How to Complete Your Order:</h4>
                     <ol>
-                        <li>Scan the QR code or use the UPI ID above</li>
-                        <li>Enter the exact amount shown</li>
-                        <li>Complete the payment in your UPI app</li>
-                        <li>Click "I've Paid" button below after payment</li>
+                        <li><strong>Make Payment:</strong> Scan QR code or use UPI ID above</li>
+                        <li><strong>Take Screenshot:</strong> Capture your payment confirmation</li>
+                        <li><strong>Upload Below:</strong> Click "Upload Screenshot" button</li>
+                        <li><strong>Submit:</strong> Click "Confirm Order" to complete</li>
                     </ol>
                 </div>
 
+                <div class="upload-section">
+                    <h3>📸 Upload Payment Screenshot</h3>
+                    <p style="color: #856404; margin-bottom: 1rem;">Please upload your payment confirmation screenshot</p>
+                    
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="fileUpload" class="file-upload-input" accept="image/*" onchange="handleFileSelect(event)">
+                        <label for="fileUpload" class="file-upload-label">
+                            📤 Upload Screenshot
+                        </label>
+                    </div>
+                    
+                    <div class="file-name" id="fileName"></div>
+                    <img id="previewImage" class="preview-image" alt="Payment Screenshot Preview">
+                </div>
+
                 <div class="success-message" id="successMessage">
-                    ✅ Thank you! Your order confirmation has been sent to our team. We'll contact you shortly!
+                    <h3>✅ Order Confirmed!</h3>
+                    <p>Thank you for your purchase! We've received your payment details.</p>
+                    <p>You'll receive an order confirmation email at <strong>krishpatel9723@gmail.com</strong> shortly.</p>
+                    <p style="margin-top: 1rem;">Order ID: <strong id="orderId"></strong></p>
                 </div>
 
                 <div style="margin-top: 2rem;">
-                    <button class="confirm-button" onclick="confirmPayment()">✓ I've Paid</button>
+                    <button class="submit-button" id="submitButton" onclick="confirmPayment()" disabled>
+                        ✓ Confirm Order
+                    </button>
                     <button class="close-button" onclick="closeModal()">Close</button>
                 </div>
             </div>
@@ -731,6 +848,7 @@
         let cartCount = 0;
         let currentProduct = '';
         let currentPrice = '';
+        let uploadedFile = null;
 
         function scrollToProducts() {
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
@@ -748,21 +866,29 @@
             amountDisplay.innerHTML = `Pay: ₹${price}`;
             
             modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
             cartCount++;
             document.getElementById('cartCount').textContent = cartCount;
             
-            // Hide success message when opening modal
+            // Reset form
             document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('fileName').style.display = 'none';
+            document.getElementById('previewImage').style.display = 'none';
+            document.getElementById('fileUpload').value = '';
+            document.getElementById('submitButton').disabled = true;
+            uploadedFile = null;
         }
 
         function closeModal() {
             document.getElementById('paymentModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         function copyUPI() {
             const upiId = '9723773368@fam';
             navigator.clipboard.writeText(upiId).then(() => {
-                alert('✓ UPI ID copied to clipboard!\n\nPaste it in your UPI app to make payment.');
+                alert('✅ UPI ID copied!\n\n' + upiId + '\n\nPaste it in your UPI app to make payment.');
             }).catch(() => {
                 const textArea = document.createElement('textarea');
                 textArea.value = upiId;
@@ -770,44 +896,95 @@
                 textArea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textArea);
-                alert('✓ UPI ID copied to clipboard!\n\nPaste it in your UPI app to make payment.');
+                alert('✅ UPI ID copied!\n\n' + upiId + '\n\nPaste it in your UPI app to make payment.');
             });
         }
 
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedFile = file;
+                
+                // Show file name
+                const fileName = document.getElementById('fileName');
+                fileName.textContent = '✓ ' + file.name;
+                fileName.style.display = 'block';
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('previewImage');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+                
+                // Enable submit button
+                document.getElementById('submitButton').disabled = false;
+            }
+        }
+
         function confirmPayment() {
+            if (!uploadedFile) {
+                alert('⚠️ Please upload your payment screenshot first!');
+                return;
+            }
+
+            // Generate order ID
+            const orderId = 'KW' + Date.now();
+            document.getElementById('orderId').textContent = orderId;
+            
             // Show success message
             const successMsg = document.getElementById('successMessage');
             successMsg.style.display = 'block';
             
-            // Send email notification using mailto (opens user's email client)
-            const subject = encodeURIComponent(`New Order - ${currentProduct}`);
+            // Scroll to success message
+            successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Prepare email content
+            const subject = encodeURIComponent(`New Order #${orderId} - ${currentProduct}`);
             const body = encodeURIComponent(
-                `New Order Received!\n\n` +
+                `🎉 NEW ORDER RECEIVED!\n\n` +
+                `Order ID: ${orderId}\n` +
                 `Product: ${currentProduct}\n` +
                 `Amount: ₹${currentPrice}\n` +
-                `UPI ID: 9723773368@fam\n\n` +
-                `Customer has confirmed payment.\n` +
+                `Payment Method: UPI (9723773368@fam)\n\n` +
+                `Customer has uploaded payment screenshot.\n` +
+                `Screenshot file: ${uploadedFile.name}\n\n` +
+                `⚠️ IMPORTANT: Customer will send payment screenshot separately.\n` +
                 `Please verify the transaction and process the order.\n\n` +
-                `Order Date: ${new Date().toLocaleString()}`
+                `Order Date: ${new Date().toLocaleString()}\n\n` +
+                `---\n` +
+                `Krish Watches - Premium Timepieces\n` +
+                `Contact: 9723773368`
             );
             
             // Open email client
-            window.location.href = `mailto:krishpatel9723@gmail.com?subject=${subject}&body=${body}`;
+            setTimeout(() => {
+                window.location.href = `mailto:krishpatel9723@gmail.com?subject=${subject}&body=${body}`;
+            }, 1000);
             
-            // Alternative: Show instructions to manually send email
+            // Show instructions
             setTimeout(() => {
                 alert(
-                    '📧 Please send the payment confirmation:\n\n' +
-                    `To: krishpatel9723@gmail.com\n` +
+                    '📧 NEXT STEPS:\n\n' +
+                    '1. Your email app will open\n' +
+                    '2. Attach your payment screenshot\n' +
+                    '3. Send the email\n\n' +
+                    `Order ID: ${orderId}\n` +
                     `Product: ${currentProduct}\n` +
                     `Amount: ₹${currentPrice}\n\n` +
-                    'Include your payment screenshot for faster processing!'
+                    'We\'ll confirm your order within 24 hours!'
                 );
-            }, 1000);
+            }, 2000);
+            
+            // Disable button after submission
+            document.getElementById('submitButton').disabled = true;
+            document.getElementById('submitButton').textContent = '✓ Order Submitted';
         }
 
         function showCart() {
-            alert('🛒 Cart feature coming soon! For now, click "Buy Now" on any product to purchase.');
+            alert('🛒 Cart feature coming soon!\n\nFor now, click "Buy Now" on any product to purchase directly.');
         }
 
         // Close modal when clicking outside
