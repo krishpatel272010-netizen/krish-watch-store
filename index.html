@@ -249,68 +249,186 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background: white;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
             padding: 3rem;
-            border-radius: 20px;
-            max-width: 500px;
+            border-radius: 25px;
+            max-width: 600px;
             width: 90%;
             text-align: center;
-            animation: slideIn 0.3s ease;
+            animation: slideIn 0.4s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 3px solid #667eea;
         }
 
         .modal h2 {
             color: #1a1a1a;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .payment-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .qr-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 1.5rem 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .qr-code {
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border: 5px solid white;
+        }
+
+        .payment-divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+            color: #666;
+        }
+
+        .payment-divider::before,
+        .payment-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .payment-divider span {
+            padding: 0 1rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upi-id-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            border: 2px solid #667eea;
         }
 
         .upi-id {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: #667eea;
+            margin: 1rem 0;
+            letter-spacing: 1px;
+        }
+
+        .amount-display {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 15px;
+            font-size: 1.8rem;
+            font-weight: bold;
             margin: 1.5rem 0;
-            border: 2px dashed #667eea;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
         }
 
         .copy-button {
-            background: #28a745;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
             color: white;
-            padding: 0.8rem 2rem;
+            padding: 1rem 2.5rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
             margin: 0.5rem;
             transition: all 0.3s;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
 
         .copy-button:hover {
-            background: #218838;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
         }
 
-        .close-button {
-            background: #dc3545;
+        .confirm-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 0.8rem 2rem;
+            padding: 1rem 2.5rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
             margin: 0.5rem;
             transition: all 0.3s;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .confirm-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .close-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0.5rem;
+            transition: all 0.3s;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
         }
 
         .close-button:hover {
-            background: #c82333;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .payment-instructions {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .payment-instructions h4 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-instructions ol {
+            margin-left: 1.5rem;
+            color: #856404;
+        }
+
+        .payment-instructions li {
+            margin: 0.5rem 0;
         }
 
         /* Footer */
@@ -378,6 +496,15 @@
             .products-grid {
                 grid-template-columns: 1fr;
             }
+
+            .qr-code {
+                width: 220px;
+                height: 220px;
+            }
+
+            .modal-content {
+                padding: 2rem 1.5rem;
+            }
         }
 
         .trust-badges {
@@ -393,6 +520,16 @@
             align-items: center;
             gap: 0.5rem;
             color: #666;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            display: none;
+            animation: fadeInUp 0.5s ease;
         }
     </style>
 </head>
@@ -531,16 +668,46 @@
     <!-- Payment Modal -->
     <div class="modal" id="paymentModal">
         <div class="modal-content">
-            <h2>Complete Your Purchase</h2>
-            <p id="productDetails"></p>
-            <p style="margin: 1rem 0; color: #666;">Pay using UPI to complete your order</p>
-            <div class="upi-id" id="upiId">9723773368@fam</div>
-            <p style="font-size: 0.9rem; color: #666;">Scan QR code or copy UPI ID to pay</p>
-            <div>
-                <button class="copy-button" onclick="copyUPI()">📋 Copy UPI ID</button>
-                <button class="close-button" onclick="closeModal()">Close</button>
+            <h2>🎉 Complete Your Purchase</h2>
+            <p id="productDetails" style="font-size: 1.1rem; color: #666; margin-bottom: 1rem;"></p>
+            
+            <div class="amount-display" id="amountDisplay"></div>
+
+            <div class="payment-section">
+                <h3 style="color: #667eea; margin-bottom: 1rem;">📱 Scan QR Code to Pay</h3>
+                <div class="qr-container">
+                    <img src="https://nyc3.digitaloceanspaces.com/bhindi-drive/files/3d47ba0d-2d39-4a22-9cb5-28559f56283e/2025-12-02T13-32-05-056Z-217be42f-chat-image-1764682325036-0.jpg" alt="UPI QR Code" class="qr-code">
+                </div>
+
+                <div class="payment-divider">
+                    <span>OR</span>
+                </div>
+
+                <div class="upi-id-section">
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">Pay using UPI ID</p>
+                    <div class="upi-id">9723773368@fam</div>
+                    <button class="copy-button" onclick="copyUPI()">📋 Copy UPI ID</button>
+                </div>
+
+                <div class="payment-instructions">
+                    <h4>💡 Payment Instructions:</h4>
+                    <ol>
+                        <li>Scan the QR code or use the UPI ID above</li>
+                        <li>Enter the exact amount shown</li>
+                        <li>Complete the payment in your UPI app</li>
+                        <li>Click "I've Paid" button below after payment</li>
+                    </ol>
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    ✅ Thank you! Your order confirmation has been sent to our team. We'll contact you shortly!
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button class="confirm-button" onclick="confirmPayment()">✓ I've Paid</button>
+                    <button class="close-button" onclick="closeModal()">Close</button>
+                </div>
             </div>
-            <p style="margin-top: 1.5rem; font-size: 0.85rem; color: #999;">After payment, screenshot and send to our WhatsApp for order confirmation</p>
         </div>
     </div>
 
@@ -562,18 +729,30 @@
 
     <script>
         let cartCount = 0;
+        let currentProduct = '';
+        let currentPrice = '';
 
         function scrollToProducts() {
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
         }
 
         function showPayment(productName, price) {
+            currentProduct = productName;
+            currentPrice = price;
+            
             const modal = document.getElementById('paymentModal');
             const productDetails = document.getElementById('productDetails');
-            productDetails.innerHTML = `<strong>${productName}</strong><br>Price: ₹${price}`;
+            const amountDisplay = document.getElementById('amountDisplay');
+            
+            productDetails.innerHTML = `<strong>${productName}</strong>`;
+            amountDisplay.innerHTML = `Pay: ₹${price}`;
+            
             modal.style.display = 'flex';
             cartCount++;
             document.getElementById('cartCount').textContent = cartCount;
+            
+            // Hide success message when opening modal
+            document.getElementById('successMessage').style.display = 'none';
         }
 
         function closeModal() {
@@ -583,17 +762,48 @@
         function copyUPI() {
             const upiId = '9723773368@fam';
             navigator.clipboard.writeText(upiId).then(() => {
-                alert('✓ UPI ID copied to clipboard!');
+                alert('✓ UPI ID copied to clipboard!\n\nPaste it in your UPI app to make payment.');
             }).catch(() => {
-                // Fallback for older browsers
                 const textArea = document.createElement('textarea');
                 textArea.value = upiId;
                 document.body.appendChild(textArea);
                 textArea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textArea);
-                alert('✓ UPI ID copied to clipboard!');
+                alert('✓ UPI ID copied to clipboard!\n\nPaste it in your UPI app to make payment.');
             });
+        }
+
+        function confirmPayment() {
+            // Show success message
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            
+            // Send email notification using mailto (opens user's email client)
+            const subject = encodeURIComponent(`New Order - ${currentProduct}`);
+            const body = encodeURIComponent(
+                `New Order Received!\n\n` +
+                `Product: ${currentProduct}\n` +
+                `Amount: ₹${currentPrice}\n` +
+                `UPI ID: 9723773368@fam\n\n` +
+                `Customer has confirmed payment.\n` +
+                `Please verify the transaction and process the order.\n\n` +
+                `Order Date: ${new Date().toLocaleString()}`
+            );
+            
+            // Open email client
+            window.location.href = `mailto:krishpatel9723@gmail.com?subject=${subject}&body=${body}`;
+            
+            // Alternative: Show instructions to manually send email
+            setTimeout(() => {
+                alert(
+                    '📧 Please send the payment confirmation:\n\n' +
+                    `To: krishpatel9723@gmail.com\n` +
+                    `Product: ${currentProduct}\n` +
+                    `Amount: ₹${currentPrice}\n\n` +
+                    'Include your payment screenshot for faster processing!'
+                );
+            }, 1000);
         }
 
         function showCart() {
