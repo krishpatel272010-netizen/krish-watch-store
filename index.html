@@ -560,16 +560,6 @@
             font-size: 1.5rem;
         }
 
-        .error-message {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin: 1.5rem 0;
-            display: none;
-            animation: fadeInUp 0.5s ease;
-        }
-
         .loading-spinner {
             display: none;
             margin: 1rem auto;
@@ -686,6 +676,28 @@
             gap: 0.5rem;
             color: white;
             opacity: 0.9;
+        }
+
+        .whatsapp-button {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 1rem 0.5rem;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .whatsapp-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
         }
     </style>
 </head>
@@ -850,8 +862,8 @@
                     <ol>
                         <li><strong>Make Payment:</strong> Scan QR code or use UPI ID above</li>
                         <li><strong>Fill Details:</strong> Enter your contact information below</li>
-                        <li><strong>Upload Screenshot:</strong> Add your payment confirmation</li>
-                        <li><strong>Submit:</strong> Click "Confirm Order" - Email sent instantly!</li>
+                        <li><strong>Click WhatsApp:</strong> Send order details & payment screenshot via WhatsApp</li>
+                        <li><strong>Get Confirmation:</strong> We'll confirm your order instantly!</li>
                     </ol>
                 </div>
 
@@ -878,42 +890,17 @@
                             <label for="customerAddress">Delivery Address *</label>
                             <textarea id="customerAddress" name="customerAddress" required placeholder="Enter your complete delivery address"></textarea>
                         </div>
-
-                        <h3 style="margin-top: 2rem;">📸 Upload Payment Screenshot *</h3>
-                        <p style="color: #856404; margin-bottom: 1rem;">Upload your UPI payment confirmation</p>
-                        
-                        <div class="file-upload-wrapper">
-                            <input type="file" id="fileUpload" class="file-upload-input" accept="image/*" required onchange="handleFileSelect(event)">
-                            <label for="fileUpload" class="file-upload-label">
-                                📤 Choose Screenshot
-                            </label>
-                        </div>
-                        
-                        <div class="file-name" id="fileName"></div>
-                        <img id="previewImage" class="preview-image" alt="Payment Screenshot Preview">
-                    </div>
-
-                    <div class="loading-spinner" id="loadingSpinner">
-                        <div class="spinner"></div>
-                        <p style="margin-top: 1rem; color: #667eea; font-weight: bold;">Sending your order...</p>
                     </div>
 
                     <div class="success-message" id="successMessage">
-                        <h3>✅ Order Confirmed!</h3>
-                        <p>Thank you for your purchase!</p>
-                        <p>Order confirmation has been sent to <strong>krishpatel12121414@gmail.com</strong></p>
+                        <h3>✅ Ready to Confirm!</h3>
+                        <p>Click the WhatsApp button below to send your order details and payment screenshot.</p>
                         <p style="margin-top: 1rem;">Order ID: <strong id="displayOrderId"></strong></p>
-                        <p style="margin-top: 1rem;">We'll process your order within 24 hours!</p>
-                    </div>
-
-                    <div class="error-message" id="errorMessage">
-                        <h3>❌ Error</h3>
-                        <p id="errorText"></p>
                     </div>
 
                     <div style="margin-top: 2rem;">
-                        <button type="submit" class="submit-button" id="submitButton">
-                            ✓ Confirm Order
+                        <button type="button" class="whatsapp-button" id="whatsappButton" onclick="sendWhatsApp()">
+                            📱 Send via WhatsApp
                         </button>
                         <button type="button" class="close-button" onclick="closeModal()">Close</button>
                     </div>
@@ -934,7 +921,7 @@
                 <a href="#">💼</a>
             </div>
             <p style="margin-top: 2rem; opacity: 0.7;">© 2024 Krish Watches. All rights reserved.</p>
-            <p style="margin-top: 0.5rem; opacity: 0.7;">Contact: 9723773368 | Email: krishpatel272010@gmail.com</p>
+            <p style="margin-top: 0.5rem; opacity: 0.7;">Contact: 9723773368 | Email: krishpatel12121414@gmail.com</p>
         </div>
     </footer>
 
@@ -943,7 +930,6 @@
         let currentProduct = '';
         let currentPrice = '';
         let currentOrderId = '';
-        let uploadedFileBase64 = '';
 
         function scrollToProducts() {
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
@@ -960,6 +946,7 @@
             
             productDetails.innerHTML = `<strong>${productName}</strong>`;
             amountDisplay.innerHTML = `Pay: ₹${price}`;
+            document.getElementById('displayOrderId').textContent = currentOrderId;
             
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -970,13 +957,6 @@
             // Reset form
             document.getElementById('orderForm').reset();
             document.getElementById('successMessage').style.display = 'none';
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('loadingSpinner').style.display = 'none';
-            document.getElementById('fileName').style.display = 'none';
-            document.getElementById('previewImage').style.display = 'none';
-            document.getElementById('submitButton').disabled = false;
-            document.getElementById('submitButton').textContent = '✓ Confirm Order';
-            uploadedFileBase64 = '';
         }
 
         function closeModal() {
@@ -999,131 +979,73 @@
             });
         }
 
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (file) {
-                // Show file name
-                const fileName = document.getElementById('fileName');
-                fileName.textContent = '✓ ' + file.name;
-                fileName.style.display = 'block';
-                
-                // Show preview and convert to base64
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById('previewImage');
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                    uploadedFileBase64 = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Handle form submission
-        document.getElementById('orderForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            if (!uploadedFileBase64) {
-                alert('⚠️ Please upload your payment screenshot!');
+        function sendWhatsApp() {
+            // Validate form
+            const form = document.getElementById('orderForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
                 return;
             }
 
-            // Show loading
-            document.getElementById('loadingSpinner').style.display = 'block';
-            document.getElementById('submitButton').disabled = true;
-            document.getElementById('submitButton').textContent = 'Sending...';
-            document.getElementById('errorMessage').style.display = 'none';
-            
             // Get form data
             const customerName = document.getElementById('customerName').value;
             const customerEmail = document.getElementById('customerEmail').value;
             const customerPhone = document.getElementById('customerPhone').value;
             const customerAddress = document.getElementById('customerAddress').value;
             const orderDate = new Date().toLocaleString();
-            
-            // Prepare email data
-            const emailData = {
-                access_key: "c8e0c5e8-4d0f-4f0b-9f3d-8e7c6b5a4d3c",
-                subject: `🎉 New Order #${currentOrderId} - ${currentProduct}`,
-                from_name: "Krish Watches Store",
-                to_email: "krishpatel12121414@gmail.com",
-                message: `
-═══════════════════════════════════════
-🎉 NEW ORDER RECEIVED!
-═══════════════════════════════════════
 
-📦 ORDER DETAILS:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Order ID: ${currentOrderId}
-Product: ${currentProduct}
-Price: ₹${currentPrice}
-Payment Method: UPI (9723773368@fam)
-Order Date: ${orderDate}
+            // Create WhatsApp message
+            const message = `🎉 *NEW ORDER - KRISH WATCHES*
 
-👤 CUSTOMER INFORMATION:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+═══════════════════════════
+📦 *ORDER DETAILS*
+═══════════════════════════
+Order ID: *${currentOrderId}*
+Product: *${currentProduct}*
+Price: *₹${currentPrice}*
+Payment: UPI (9723773368@fam)
+Date: ${orderDate}
+
+═══════════════════════════
+👤 *CUSTOMER INFORMATION*
+═══════════════════════════
 Name: ${customerName}
 Email: ${customerEmail}
 Phone: ${customerPhone}
 Address: ${customerAddress}
 
-💳 PAYMENT STATUS:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ Payment screenshot uploaded
-✅ Customer has confirmed payment
-⚠️ Please verify the transaction
+═══════════════════════════
+💳 *PAYMENT STATUS*
+═══════════════════════════
+✅ Payment completed
+📸 Screenshot will be sent next
 
-📸 Payment Screenshot:
-See attached image below
+⌚ *KRISH WATCHES*
+Premium Timepieces`;
 
-═══════════════════════════════════════
-⌚ KRISH WATCHES - Premium Timepieces
-Contact: 9723773368
-═══════════════════════════════════════
-                `,
-                attachment: uploadedFileBase64
-            };
-
-            try {
-                const response = await fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(emailData)
-                });
-
-                const result = await response.json();
-
-                // Hide loading
-                document.getElementById('loadingSpinner').style.display = 'none';
-
-                if (result.success) {
-                    // Show success message
-                    document.getElementById('displayOrderId').textContent = currentOrderId;
-                    document.getElementById('successMessage').style.display = 'block';
-                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    document.getElementById('submitButton').textContent = '✓ Order Submitted';
-                    
-                    console.log('✅ Email sent successfully!', result);
-                } else {
-                    throw new Error(result.message || 'Failed to send email');
-                }
-            } catch (error) {
-                console.error('❌ Error:', error);
+            // Encode message for URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Your WhatsApp number (replace with your actual number)
+            const whatsappNumber = '919723773368'; // Format: country code + number (no + or spaces)
+            
+            // Create WhatsApp URL
+            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Open WhatsApp
+            setTimeout(() => {
+                window.open(whatsappURL, '_blank');
                 
-                // Hide loading
-                document.getElementById('loadingSpinner').style.display = 'none';
-                document.getElementById('submitButton').disabled = false;
-                document.getElementById('submitButton').textContent = '✓ Confirm Order';
-                
-                // Show error message
-                document.getElementById('errorText').textContent = 'Failed to send order. Please try again or contact us at krishpatel12121414@gmail.com';
-                document.getElementById('errorMessage').style.display = 'block';
-                document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
+                // Show instruction
+                setTimeout(() => {
+                    alert('📱 WhatsApp opened!\n\n✅ Message is pre-filled\n📸 Now attach your payment screenshot\n✉️ Click Send\n\nWe\'ll confirm your order immediately!');
+                }, 1000);
+            }, 500);
+        }
 
         function showCart() {
             alert('🛒 Cart feature coming soon!\n\nFor now, click "Buy Now" on any product to purchase directly.');
