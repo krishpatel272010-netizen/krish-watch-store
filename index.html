@@ -432,6 +432,98 @@
             min-height: 80px;
         }
 
+        /* NEW: Payment Screenshot Upload Section */
+        .screenshot-upload-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 2px solid #2196F3;
+        }
+
+        .screenshot-upload-section h3 {
+            color: #0d47a1;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border: 3px dashed #2196F3;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload-label:hover {
+            background: #f5f5f5;
+            border-color: #1976D2;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-text {
+            color: #0d47a1;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-hint {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .preview-container {
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+
+        .remove-image-btn {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .remove-image-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
         .close-button {
             background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
             color: white;
@@ -820,6 +912,7 @@
                     <h4>💡 How to Complete Your Order:</h4>
                     <ol>
                         <li><strong>Make Payment:</strong> Scan QR code or use UPI ID above</li>
+                        <li><strong>Upload Screenshot:</strong> Take a screenshot of payment confirmation</li>
                         <li><strong>Fill Details:</strong> Enter your contact information below</li>
                         <li><strong>Choose Method:</strong> Send order via WhatsApp OR Email</li>
                         <li><strong>Get Confirmation:</strong> We'll confirm your order within 24 hours!</li>
@@ -827,6 +920,23 @@
                 </div>
 
                 <form id="orderForm">
+                    <!-- NEW: Payment Screenshot Upload Section -->
+                    <div class="screenshot-upload-section">
+                        <h3>📸 Upload Payment Screenshot</h3>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="paymentScreenshot" class="file-upload-input" accept="image/*" onchange="handleFileSelect(event)">
+                            <label for="paymentScreenshot" class="file-upload-label">
+                                <div class="file-upload-icon">📤</div>
+                                <div class="file-upload-text">Click to Upload Payment Screenshot</div>
+                                <div class="file-upload-hint">Supports: JPG, PNG, JPEG (Max 5MB)</div>
+                            </label>
+                        </div>
+                        <div class="preview-container" id="previewContainer">
+                            <img id="previewImage" class="preview-image" alt="Payment Screenshot Preview">
+                            <button type="button" class="remove-image-btn" onclick="removeImage()">🗑️ Remove Image</button>
+                        </div>
+                    </div>
+
                     <div class="upload-section">
                         <h3>📋 Your Details</h3>
                         
@@ -899,6 +1009,8 @@
         let currentProduct = '';
         let currentPrice = '';
         let currentOrderId = '';
+        let uploadedImageFile = null;
+        let uploadedImageBase64 = null;
 
         function scrollToProducts() {
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
@@ -926,6 +1038,7 @@
             // Reset form
             document.getElementById('orderForm').reset();
             document.getElementById('successMessage').style.display = 'none';
+            removeImage();
         }
 
         function closeModal() {
@@ -948,11 +1061,53 @@
             });
         }
 
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.match('image.*')) {
+                alert('❌ Please upload an image file (JPG, PNG, JPEG)');
+                return;
+            }
+
+            // Validate file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('❌ File size must be less than 5MB');
+                return;
+            }
+
+            uploadedImageFile = file;
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImageBase64 = e.target.result;
+                document.getElementById('previewImage').src = e.target.result;
+                document.getElementById('previewContainer').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeImage() {
+            uploadedImageFile = null;
+            uploadedImageBase64 = null;
+            document.getElementById('paymentScreenshot').value = '';
+            document.getElementById('previewContainer').style.display = 'none';
+            document.getElementById('previewImage').src = '';
+        }
+
         function sendWhatsApp() {
             // Validate form
             const form = document.getElementById('orderForm');
             if (!form.checkValidity()) {
                 form.reportValidity();
+                return;
+            }
+
+            // Check if screenshot is uploaded
+            if (!uploadedImageFile) {
+                alert('⚠️ Please upload payment screenshot before sending!');
                 return;
             }
 
@@ -987,7 +1142,7 @@ Address: ${customerAddress}
 💳 *PAYMENT STATUS*
 ═══════════════════════════
 ✅ Payment completed
-📸 Screenshot will be sent next
+📸 Screenshot attached
 
 ⌚ *KRISH WATCHES*
 Premium Timepieces`;
@@ -1020,6 +1175,12 @@ Premium Timepieces`;
             const form = document.getElementById('orderForm');
             if (!form.checkValidity()) {
                 form.reportValidity();
+                return;
+            }
+
+            // Check if screenshot is uploaded
+            if (!uploadedImageFile) {
+                alert('⚠️ Please upload payment screenshot before sending!');
                 return;
             }
 
